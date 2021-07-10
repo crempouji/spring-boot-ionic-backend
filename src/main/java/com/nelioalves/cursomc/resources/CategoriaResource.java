@@ -1,6 +1,7 @@
 package com.nelioalves.cursomc.resources;
 
 import com.nelioalves.cursomc.domain.Categoria;
+import com.nelioalves.cursomc.dto.CategoriaDTO;
 import com.nelioalves.cursomc.services.CategoriaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/categorias")
@@ -42,4 +44,11 @@ public class CategoriaResource {
 		categoriaService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+
+	@GetMapping()
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
+		List<CategoriaDTO> list = categoriaService.findAll();
+		return ResponseEntity.ok().body(list);
+	}
+
 }
