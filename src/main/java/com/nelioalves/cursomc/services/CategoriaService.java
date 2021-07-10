@@ -7,6 +7,9 @@ import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,7 +49,11 @@ public class CategoriaService {
 
 	public List<CategoriaDTO> findAll() {
 		List<Categoria> list = categoriaRepository.findAll();
-		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
-		return listDto;
+		return list.stream().map(CategoriaDTO::new).collect(Collectors.toList());
+	}
+
+	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+		return categoriaRepository.findAll(pageRequest);
 	}
 }
