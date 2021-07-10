@@ -2,7 +2,7 @@ package com.nelioalves.cursomc.resources;
 
 import com.nelioalves.cursomc.domain.Categoria;
 import com.nelioalves.cursomc.services.CategoriaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -11,10 +11,10 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/categorias")
+@RequiredArgsConstructor()
 public class CategoriaResource {
 
-	@Autowired
-	private CategoriaService categoriaService;
+	private final CategoriaService categoriaService;
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
@@ -27,5 +27,13 @@ public class CategoriaResource {
 		obj = categoriaService.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
+	}
+
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<Void> update(@PathVariable Integer id, @RequestBody Categoria obj) {
+		obj.setId(id);
+		obj = categoriaService.update(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.noContent().build();
 	}
 }
