@@ -34,9 +34,10 @@ public class CategoriaService {
 	}
 
 	public Categoria update(Categoria obj) {
-		find(obj.getId());
-		return categoriaRepository.save(obj);
-	}
+        Categoria categoriaAntiga = find(obj.getId());
+        updateData(categoriaAntiga, obj);
+        return categoriaRepository.save(categoriaAntiga);
+    }
 
 	public void delete(Integer id) {
 		find(id);
@@ -50,14 +51,18 @@ public class CategoriaService {
 	public List<CategoriaDTO> findAll() {
 		List<Categoria> list = categoriaRepository.findAll();
 		return list.stream().map(CategoriaDTO::new).collect(Collectors.toList());
-	}
+    }
 
-	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-		return categoriaRepository.findAll(pageRequest);
-	}
+    public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return categoriaRepository.findAll(pageRequest);
+    }
 
-	public Categoria fromDto(CategoriaDTO objDto) {
-		return new Categoria(objDto.getId(), objDto.getNome());
-	}
+    public Categoria fromDto(CategoriaDTO objDto) {
+        return new Categoria(objDto.getId(), objDto.getNome());
+    }
+
+    public void updateData(Categoria categoriaAntiga, Categoria obj) {
+        categoriaAntiga.setNome(obj.getNome());
+    }
 }
